@@ -72,6 +72,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                     for (int j = i; j < n; j++) {
                         code[j] = code[j + 1];
                     }
+                    free(code[n]);
                     n--;//proveri ovu promenu n i i
                     i--;
                 }
@@ -79,7 +80,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
             else if (firstOcurrance && secondOcurrance) {
                 comments++;
                 int temp = firstOcurrance - code[i];
-                int temp1 = secondOcurrance - code[i] + 1;
+                int temp1 = secondOcurrance - code[i] + strlen(endComment) - 1;
                 char* one = malloc(sizeof(char) * (temp1 - temp + 2));
                 if (!one) {
                     printf("MEM_GRESKA\n");
@@ -89,6 +90,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 for (int k = temp; k <= temp1; k++) {
                     one[s++] = code[i][k];
                 }
+                printf("%d %d\n", temp, temp1);
                 one[temp1 - temp + 1] = 0;
                 removeSubstr(code[i], one);
                 /*if (strlen(code[i]) == 0) {
@@ -122,9 +124,10 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 }
                 free(tmp);
             }
-        }free(firstOcurrance);
-        free(secondOcurrance);
+        }
     }
+    free(firstOcurrance);
+    free(secondOcurrance);
     if (comments) {
         for (int i = 0; i < n; printf("%s\n", code[i++]));
     }
