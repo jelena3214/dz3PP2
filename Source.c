@@ -61,8 +61,25 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
 
     for (int i = 0; i < n; i++) {
         while (1) {
+            //ovo pogledaj kad je komentar '''
             firstOcurrance = strstr(code[i], beginComment);
-            secondOcurrance = strstr(code[i], endComment);
+            if (firstOcurrance) {
+                int len = firstOcurrance - code[i];
+                char* hel = code[i];
+                int start = len + strlen(beginComment);
+                for (int s = 0; s <= start; s++) {
+                    hel++;
+                }
+                //printf("hel:%s\n", hel);
+                secondOcurrance = strstr(hel, endComment);
+
+                /*printf("CODE%s\n", code[i]);
+                printf("sec%s\n", secondOcurrance);
+                printf("firs%s\n", firstOcurrance);*/
+            }
+            else {
+                secondOcurrance = strstr(code[i], endComment);
+            }
             if (firstOcurrance == NULL && secondOcurrance == NULL)break; //tu nema komentara
             else if (secondOcurrance == NULL) {
                 comments++;
@@ -90,7 +107,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 for (int k = temp; k <= temp1; k++) {
                     one[s++] = code[i][k];
                 }
-                printf("%d %d\n", temp, temp1);
+                //printf("%d %d\n", temp, temp1);
                 one[temp1 - temp + 1] = 0;
                 removeSubstr(code[i], one);
                 /*if (strlen(code[i]) == 0) {
@@ -99,6 +116,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                     }
                     n--;//proveri ovu promenu n i i
                     i--;*/
+                    //printf("%s\n", code[i]);
                 free(one);
             }
             else if (firstOcurrance == NULL) {
@@ -126,8 +144,6 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
             }
         }
     }
-    free(firstOcurrance);
-    free(secondOcurrance);
     if (comments) {
         for (int i = 0; i < n; printf("%s\n", code[i++]));
     }
