@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-//sta ako ne unesu z kraj koma?
 char* readLine() {
     char* inp = NULL;
     char c;
@@ -13,7 +12,7 @@ char* readLine() {
         inp = realloc(inp, sizeof(char) * (size + 1));
         if (!inp) {
             printf("MEM_GRESKA\n");
-            exit(-1);
+            exit(0);
         }
         inp[size - 1] = c;
         inp[size] = '\0';
@@ -22,17 +21,16 @@ char* readLine() {
 }
 
 char** readLines(int* n) {
-    char** code = 0;
+    char** code = NULL;
     char* p;
     while ((p = readLine()) != NULL) {
         (*n)++;
-        code = realloc(code, sizeof(char*) * ((*n) + 1));
+        code = realloc(code, sizeof(char*) * (*n));
         if (!code) {
             printf("MEM_GRESKA\n");
-            exit(-1);
+            exit(0);
         }
         code[(*n) - 1] = p;
-        code[(*n)] = NULL;
     }
     return code;
 }
@@ -61,7 +59,6 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
 
     for (int i = 0; i < n; i++) {
         while (1) {
-            //ovo pogledaj kad je komentar '''
             firstOcurrance = strstr(code[i], beginComment);
             if (firstOcurrance) {
                 int len = firstOcurrance - code[i];
@@ -70,12 +67,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 for (int s = 0; s <= start; s++) {
                     hel++;
                 }
-                //printf("hel:%s\n", hel);
                 secondOcurrance = strstr(hel, endComment);
-
-                /*printf("CODE%s\n", code[i]);
-                printf("sec%s\n", secondOcurrance);
-                printf("firs%s\n", firstOcurrance);*/
             }
             else {
                 secondOcurrance = strstr(code[i], endComment);
@@ -89,51 +81,52 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                     for (int j = i; j < n; j++) {
                         code[j] = code[j + 1];
                     }
-                    free(code[n]);
-                    n--;//proveri ovu promenu n i i
+                    n--;
                     i--;
                 }
             }
             else if (firstOcurrance && secondOcurrance) {
+                
                 comments++;
                 int temp = firstOcurrance - code[i];
                 int temp1 = secondOcurrance - code[i] + strlen(endComment) - 1;
                 char* one = malloc(sizeof(char) * (temp1 - temp + 2));
                 if (!one) {
                     printf("MEM_GRESKA\n");
-                    exit(-1);
+                    exit(0);
                 }
                 int s = 0;
                 for (int k = temp; k <= temp1; k++) {
                     one[s++] = code[i][k];
                 }
-                //printf("%d %d\n", temp, temp1);
+
                 one[temp1 - temp + 1] = 0;
                 removeSubstr(code[i], one);
+                free(one);
                 if (strlen(code[i]) == 0) {
                     for (int j = i; j < n; j++) {
                         code[j] = code[j + 1];
                     }
-                    n--;//proveri ovu promenu n i i
-                    //i--;
-                    //printf("%s\n", code[i]);
+                    n--;
+
                 }
-                free(one);
+                
             }
             else if (firstOcurrance == NULL) {
                 int temp = secondOcurrance - code[i];
                 char* tmp = malloc(sizeof(char) * (strlen(code[i]) - strlen(endComment) - temp + 1));
                 if (!tmp) {
                     printf("MEM_GRESKA\n");
-                    exit(-1);
+                    exit(0);
                 }
                 temp = temp + strlen(endComment);
                 int iterate = strlen(code[i]) + 1, k = 0;
                 for (int j = temp; j <= iterate; j++) {
                     tmp[k++] = code[i][j];
                 }
-                //code[i] = tmp;
-                memcpy(code[i], tmp, sizeof(char) * (strlen(tmp)+1));
+
+                memcpy(code[i], tmp, sizeof(char) * (strlen(tmp) + 1));
+                free(tmp);
                 if (strlen(code[i]) == 0) {
                     for (int j = i; j < n; j++) {
                         code[j] = code[j + 1];
@@ -141,7 +134,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                     n--;
                     i--;
                 }
-                free(tmp);
+                
             }
         }
     }
@@ -155,14 +148,12 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
 }
 
 int main() {
-    //freska kad se unese samo jedna oznaka za komentar
     char* comment_begin, * comment_end;
     comment_begin = readLine();
     comment_end = readLine();
     int n = 0;
     char** str = readLines(&n);
     removeComments(comment_begin, comment_end, str, n);
-    //for (int i = 0; i < n; printf("%s\n", str[i++]));
     free(comment_begin);
     free(comment_end);
     for (int i = 0; i < n; i++) {
