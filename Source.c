@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+//sta ako ne unesu z kraj koma?
 char* readLine() {
     char* inp = NULL;
     char c;
@@ -155,12 +155,14 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
 }
 
 int main() {
+    //freska kad se unese samo jedna oznaka za komentar
     char* comment_begin, * comment_end;
     comment_begin = readLine();
     comment_end = readLine();
     int n = 0;
     char** str = readLines(&n);
     removeComments(comment_begin, comment_end, str, n);
+    //for (int i = 0; i < n; printf("%s\n", str[i++]));
     free(comment_begin);
     free(comment_end);
     for (int i = 0; i < n; i++) {
