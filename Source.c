@@ -110,13 +110,14 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 //printf("%d %d\n", temp, temp1);
                 one[temp1 - temp + 1] = 0;
                 removeSubstr(code[i], one);
-                /*if (strlen(code[i]) == 0) {
+                if (strlen(code[i]) == 0) {
                     for (int j = i; j < n; j++) {
                         code[j] = code[j + 1];
                     }
                     n--;//proveri ovu promenu n i i
-                    i--;*/
+                    //i--;
                     //printf("%s\n", code[i]);
+                }
                 free(one);
             }
             else if (firstOcurrance == NULL) {
@@ -131,13 +132,13 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 for (int j = temp; j <= iterate; j++) {
                     tmp[k++] = code[i][j];
                 }
-                code[i] = tmp;
-
+                //code[i] = tmp;
+                memcpy(code[i], tmp, sizeof(char) * (strlen(tmp)+1));
                 if (strlen(code[i]) == 0) {
                     for (int j = i; j < n; j++) {
                         code[j] = code[j + 1];
                     }
-                    n--;//proveri ovu promenu n i i
+                    n--;
                     i--;
                 }
                 free(tmp);
@@ -157,8 +158,8 @@ int main() {
     char* comment_begin, * comment_end;
     comment_begin = readLine();
     comment_end = readLine();
-    int n = 0, * p = &n;
-    char** str = readLines(p);
+    int n = 0;
+    char** str = readLines(&n);
     removeComments(comment_begin, comment_end, str, n);
     free(comment_begin);
     free(comment_end);
