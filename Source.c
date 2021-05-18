@@ -137,18 +137,36 @@ void removeComments(char* beginComment, char* endComment, char** code, int *n) {
             printf("%s\n", code[i]);
         }
     }
-    else {
-        printf("GRESKA\n");
-    }
 
 }
+
+int isSpace(char* s) {
+    while (*s != '\0') {
+        if (!isspace((unsigned char)*s))
+            return 0;
+        s++;
+    }
+    return 1;
+}
+
 
 int main() {
     char* comment_begin, * comment_end;
     comment_begin = readLine();
     comment_end = readLine();
+    if (comment_begin == NULL || comment_begin == NULL) {
+        printf("GRESKA\n");
+    }
     int n = 0;
     char** str = readLines(&n);
+    int s = 0;
+    for (int i = 0; i < n; i++) {
+        if (str[i] == '\n') {
+            s++;
+        }
+    }if (s == n) {
+        printf("GRESKA\n");
+    }
     removeComments(comment_begin, comment_end, str, &n);
     free(comment_begin);
     free(comment_end);
