@@ -53,11 +53,11 @@ void removeSubstr(char* string, char* sub) {
     }
 }
 
-void removeComments(char* beginComment, char* endComment, char** code, int n) {
+void removeComments(char* beginComment, char* endComment, char** code, int *n) {
     char* firstOcurrance, * secondOcurrance;
     int comments = 0;
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < (*n); i++) {
         while (1) {
             firstOcurrance = strstr(code[i], beginComment);
             if (firstOcurrance) {
@@ -78,10 +78,11 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 int temp = firstOcurrance - code[i];
                 code[i][temp] = '\0';
                 if ((strlen(code[i]) == 0) || isSpace(code[i])) {
-                    for (int j = i; j < n; j++) {
+                    char* del = code[i];
+                    for (int j = i; j < (*n); j++) {
                         code[j] = code[j + 1];
-                    }
-                    n--;
+                    }free(del);
+                    (*n)--;
                     i--;
                 }
             }
@@ -104,10 +105,11 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 removeSubstr(code[i], one);
                 free(one);
                 if (strlen(code[i]) == 0) {
-                    for (int j = i; j < n; j++) {
+                    char* del = code[i];
+                    for (int j = i; j < (*n); j++) {
                         code[j] = code[j + 1];
-                    }
-                    n--;
+                    }free(del);
+                    (*n)--;
 
                 }
                 
@@ -128,10 +130,11 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
                 memcpy(code[i], tmp, sizeof(char) * (strlen(tmp) + 1));
                 free(tmp);
                 if (strlen(code[i]) == 0) {
-                    for (int j = i; j < n; j++) {
+                    char* del = code[i];
+                    for (int j = i; j < (*n); j++) {
                         code[j] = code[j + 1];
-                    }
-                    n--;
+                    }free(del);
+                    (*n)--;
                     i--;
                 }
                 
@@ -139,7 +142,9 @@ void removeComments(char* beginComment, char* endComment, char** code, int n) {
         }
     }
     if (comments) {
-        for (int i = 0; i < n; printf("%s\n", code[i++]));
+        for (int i = 0; i < (*n); i++) {
+            printf("%s\n", code[i]);
+        }
     }
     else {
         printf("GRESKA\n");
@@ -153,7 +158,7 @@ int main() {
     comment_end = readLine();
     int n = 0;
     char** str = readLines(&n);
-    removeComments(comment_begin, comment_end, str, n);
+    removeComments(comment_begin, comment_end, str, &n);
     free(comment_begin);
     free(comment_end);
     for (int i = 0; i < n; i++) {
