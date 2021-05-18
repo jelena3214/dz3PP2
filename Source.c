@@ -118,7 +118,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int *n) {
                     tmp[k++] = code[i][j];
                 }
 
-                memcpy(code[i], tmp, sizeof(char) * (strlen(tmp) + 1));
+                memcpy(code[i], tmp, sizeof(char) * (strlen(tmp) + 1));//memmove ako zabode
                 free(tmp);
                 if (strlen(code[i]) == 0) {
                     char* del = code[i];
@@ -139,16 +139,6 @@ void removeComments(char* beginComment, char* endComment, char** code, int *n) {
     }
 
 }
-
-int isSpace(char* s) {
-    while (*s != '\0') {
-        if (!isspace((unsigned char)*s))
-            return 0;
-        s++;
-    }
-    return 1;
-}
-
 
 int main() {
     char* comment_begin, * comment_end;
