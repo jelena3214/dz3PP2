@@ -77,7 +77,7 @@ void removeComments(char* beginComment, char* endComment, char** code, int *n) {
                 comments++;
                 int temp = firstOcurrance - code[i];
                 code[i][temp] = '\0';
-                if ((strlen(code[i]) == 0) || isSpace(code[i])) {
+                if ((strlen(code[i]) == 0)) {//pogledaj sta ce ovo isspace
                     char* del = code[i];
                     for (int j = i; j < (*n); j++) {
                         code[j] = code[j + 1];
